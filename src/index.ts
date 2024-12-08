@@ -1,9 +1,11 @@
 import { getDtsContent } from './dtsContent'
-import { isToml, isConstToml } from './util'
 import { createLogger } from './logger'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import type { LanguagePlugin } from '@volar/language-core'
 import type {} from '@volar/typescript'
+
+const isConstJson = (filename: string): boolean =>
+  filename.endsWith('.const.json')
 
 export = createLanguageServicePlugin((ts, info) => {
   const tsConfigPath = info.project.getProjectName()
@@ -16,21 +18,21 @@ export = createLanguageServicePlugin((ts, info) => {
 
   const plugin: LanguagePlugin<string> = {
     getLanguageId(scriptId) {
-      if (isToml(scriptId)) {
-        return 'toml'
+      if (isConstJson(scriptId)) {
+        return 'json'
       }
     },
     createVirtualCode(scriptId, languageId) {
-      if (languageId !== 'toml') return undefined
+      if (languageId !== 'json') return undefined
 
       const fileName = scriptId.includes('://')
         ? (scriptId.split('://')[1] ?? '')
         : scriptId
 
-      const dtsContent = getDtsContent(fileName, logger, isConstToml(fileName))
+      const dtsContent = getDtsContent(fileName, logger)
       return {
         id: 'main',
-        languageId: 'toml',
+        languageId: 'const.json',
         snapshot: {
           getText: (start, end) => dtsContent.slice(start, end),
           getLength: () => dtsContent.length,
@@ -42,7 +44,7 @@ export = createLanguageServicePlugin((ts, info) => {
     typescript: {
       extraFileExtensions: [
         {
-          extension: 'toml',
+          extension: 'json',
           isMixedContent: true,
           scriptKind: ts.ScriptKind.TS
         }
