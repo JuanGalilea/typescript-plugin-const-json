@@ -1,46 +1,39 @@
-import { VirtualFile } from './VirtualFile'
-import { Logger } from './Logger'
+import { getDtsContent } from './dtsContent'
+import { isJson } from './util'
+import { createLogger } from './logger'
 import { createLanguageServicePlugin } from '@volar/typescript/lib/quickstart/createLanguageServicePlugin'
 import type { LanguagePlugin } from '@volar/language-core'
-import type { } from '@volar/typescript'
-
-function isConstJson (filename: string): filename is `${string}.const.json` {
-  return filename.endsWith('.const.json')
-}
-
-const LANGUAGE_ID = 'json'
+import type {} from '@volar/typescript'
 
 export = createLanguageServicePlugin((ts, info) => {
-  const projectName = info.project.getProjectName()
-  if (!info.project.fileExists(projectName)) {
+  const tsConfigPath = info.project.getProjectName()
+  if (!info.project.fileExists(tsConfigPath)) {
     // project name not a tsconfig path, this is a inferred project
     return { languagePlugins: [] }
   }
 
-  const logger = Logger.fromInfo(info)
+  const logger = createLogger(info)
 
   const plugin: LanguagePlugin<string> = {
     getLanguageId(scriptId) {
-      if (isConstJson(scriptId)) {
-        return LANGUAGE_ID
+      if (isJson(scriptId)) {
+        return 'json'
       }
     },
     createVirtualCode(scriptId, languageId) {
-      if (languageId !== LANGUAGE_ID) return undefined
+      if (languageId !== 'json') return undefined
 
-      const virtualFile = VirtualFile.fromScriptId(scriptId)
-      if (virtualFile.error) {
-        logger.error(virtualFile.error)
-      }
-      
-      const dts = virtualFile.toString()
+      const fileName = scriptId.includes('://')
+        ? (scriptId.split('://')[1] ?? '')
+        : scriptId
 
+      const dtsContent = getDtsContent(fileName, logger)
       return {
         id: 'main',
-        languageId: LANGUAGE_ID,
+        languageId: 'json',
         snapshot: {
-          getText: (start, end) => dts.slice(start, end),
-          getLength: () => dts.length,
+          getText: (start, end) => dtsContent.slice(start, end),
+          getLength: () => dtsContent.length,
           getChangeRange: () => undefined
         },
         mappings: []

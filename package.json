@@ -1,7 +1,7 @@
 {
-  "name": "typescript-plugin-toml",
-  "version": "0.5.0",
-  "description": "A typescript language service plugin providing support for toml files.",
+  "name": "typescript-plugin-json-const",
+  "version": "0.6.0",
+  "description": "A typescript language service plugin providing support for json files as const.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sapphi-red/typescript-plugin-toml.git"
+    "url": "git+https://github.com/JuanGalilea/typescript-plugin-const-json.git"
   },
   "keywords": [
     "typescript",
@@ -21,12 +21,12 @@
   "files": [
     "dist"
   ],
-  "author": "sapphi-red",
+  "author": "JuanGalilea",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sapphi-red/typescript-plugin-toml/issues"
+    "url": "https://github.com/JuanGalilea/typescript-plugin-const-json/issues"
   },
-  "homepage": "https://github.com/sapphi-red/typescript-plugin-toml#readme",
+  "homepage": "https://github.com/JuanGalilea/typescript-plugin-const-json#readme",
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@types/node": "^20.16.1",
@@ -38,8 +38,7 @@
     "typescript-eslint": "^8.3.0"
   },
   "dependencies": {
-    "@volar/typescript": "^2.4.0",
-    "toml-eslint-parser": "^0.10.0"
+    "@volar/typescript": "^2.4.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.2"

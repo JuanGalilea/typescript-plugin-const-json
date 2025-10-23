@@ -1,29 +1,23 @@
 import type ts from 'typescript/lib/tsserverlibrary'
 
-const PREFIX = '[typescript-plugin-const-json]'
+export interface Logger {
+  log: (message: string) => void
+  error: (error: Error) => void
+}
 
-export class Logger {
-  constructor(
-    private readonly logger: ts.server.Logger,
-    private readonly prefix = PREFIX
-  ) {}
-
-  static fromInfo(info: ts.server.PluginCreateInfo) {
-    return new this(info.project.projectService.logger)
+export const createLogger = (info: ts.server.PluginCreateInfo): Logger => {
+  const log = (message: string) => {
+    info.project.projectService.logger.info(
+      `[typescript-plugin-json-const] ${message}`
+    )
+  }
+  const error = (error: Error) => {
+    log(`Failed ${error.toString()}`)
+    log(`Stack trace: ${error.stack}`)
   }
 
-  private format(...args: unknown[]) {
-    return [this.prefix, ...args].join(' ')
-  }
-
-  info(...args: unknown[]) {
-    this.logger.info(this.format(...args))
-  }
-
-  error(e: unknown) {
-    this.info(`Failed ${e}`)
-    if (e instanceof Error) {
-      this.info(`Stack trace: ${e.stack}`)
-    }
+  return {
+    log,
+    error
   }
 }
