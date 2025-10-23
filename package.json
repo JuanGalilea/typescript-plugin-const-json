@@ -1,6 +1,6 @@
 {
   "name": "typescript-plugin-json-const",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A typescript language service plugin providing support for json files as const.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

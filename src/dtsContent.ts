@@ -3,11 +3,11 @@ import { readFileSync } from 'fs'
 
 export const getDtsContent = (fileName: string, logger: Logger): string => {
   const text = readFileSync(fileName, 'utf-8')
-
+  const content = JSON.stringify(JSON.parse(text))
   let dts
   try {
     dts = `
-declare const data = ${text}${' as const'}
+declare const data = ${content}${' as const'}
 export default data
 `
   } catch (e: unknown) {
