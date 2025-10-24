@@ -11,7 +11,10 @@ declare const data = ${content}${' as const'}
 export default data
 `
     if (fileName.toLowerCase().endsWith('schema.json')) {
-      writeFileSync(fileName.replace('.json', '.d.json.ts'), dts, 'utf-8')
+      writeFileSync(fileName.replace('.json', '.d.json.ts'), dts, {
+        encoding: 'utf-8',
+        flag: 'w'
+      })
     }
   } catch (e: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
